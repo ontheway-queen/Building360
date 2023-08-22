@@ -19,18 +19,43 @@ class VehicleController extends Controller
     public function index(Request $request)
     {
 
-        if ($request->vehicle_owner) {
-            $data['vehicles'] = Vehicle::where('vehicle_owner', $request->vehicle_owner)
-                ->join('fuels', 'fuels.fuel_id', '=', 'vehicles.fuel_type')
-                ->join('driver', 'driver.vehicle_assignment', '=', 'vehicles.vehicle_id')
+
+        if ($request->vehicle_owner == null) {
+            $data['vehicles'] = Vehicle::join('fuels', 'fuels.fuel_id', '=', 'vehicles.fuel_type')
+                //->join('driver', 'driver.vehicle_assignment', '=', 'vehicles.vehicle_id')
+                ->join('users', 'users.id', '=', 'vehicles.vehicle_owner')
+                ->where('users.unique_user_id', $request->unique_user_id)
                 ->get();
         } else {
-            $data['vehicles'] = Vehicle::join('fuels', 'fuels.fuel_id', '=', 'vehicles.fuel_type')
-                ->join('driver', 'driver.vehicle_assignment', '=', 'vehicles.vehicle_id')
+            $data['vehicles'] = Vehicle::where('vehicle_owner', $request->vehicle_owner)
+                ->join('fuels', 'fuels.fuel_id', '=', 'vehicles.fuel_type')
                 ->join('users', 'users.id', '=', 'vehicles.vehicle_owner')
                 ->where('users.unique_user_id', $request->unique_user_id)
                 ->get();
         }
+
+        // echo '<pre>';
+        // print_r($data['vehicles']);
+
+        // die;
+
+        // $data['vehicles'] = Vehicle::join('fuels', 'fuels.fuel_id', '=', 'vehicles.fuel_type')
+        //     ->join('users', 'users.id', '=', 'vehicles.vehicle_owner')
+        //     ->where('users.unique_user_id', $request->unique_user_id)
+        //     ->get();
+
+        // if ($request->vehicle_owner) {
+        // $data['vehicles'] = Vehicle::where('vehicle_owner', $request->vehicle_owner)
+        //     ->join('fuels', 'fuels.fuel_id', '=', 'vehicles.fuel_type')
+        //     ->join('driver', 'driver.vehicle_assignment', '=', 'vehicles.vehicle_id')
+        //     ->get();
+        // } else {
+        //     $data['vehicles'] = Vehicle::join('fuels', 'fuels.fuel_id', '=', 'vehicles.fuel_type')
+        //         ->join('driver', 'driver.vehicle_assignment', '=', 'vehicles.vehicle_id')
+        //         ->join('users', 'users.id', '=', 'vehicles.vehicle_owner')
+        //         ->where('users.unique_user_id', $request->unique_user_id)
+        //         ->get();
+        // }
 
         return response()->json(['success' => true, 'message' => 'Successfully Done', 'data' => $data['vehicles']], 200);
     }
@@ -61,10 +86,8 @@ class VehicleController extends Controller
             'vehicle_type' => 'required',
             'fuel_type' => 'required',
             'vehicle_status' => 'required',
+            'vehicle_owner' => 'required',
         ]);
-
-
-
         if ($validator->fails()) {
 
             return response()->json([
@@ -82,7 +105,7 @@ class VehicleController extends Controller
 
             // $get_fuel_type = Fuel::where('fuel_id', $request->fuel_type)->first();
 
-            $vehicle->fuel_type = $request->fuel_id;
+            $vehicle->fuel_type = $request->fuel_type;
             $vehicle->vehicle_status = $request->vehicle_status;
             $vehicle->insurance_information = $request->insurance_information;
             $vehicle->maintenance_history = $request->maintenance_history;
@@ -90,6 +113,8 @@ class VehicleController extends Controller
             $vehicle->mileage = $request->mileage;
             $vehicle->save();
             $data = new CommonResource($vehicle);
+
+
 
             return response()->json(['success' => true, 'message' => 'Successfully Done', 'data' => $data], 200);
         }
@@ -126,7 +151,42 @@ class VehicleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'vin' => 'required',
+            'license_plate_number' => 'required',
+            'vehicle_type' => 'required',
+            'fuel_type' => 'required',
+            'vehicle_status' => 'required',
+            'vehicle_owner' => 'required',
+        ]);
+
+
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'message' => 'Invalid params passed',
+                'success' => true, // the ,message you want to show
+                'errors' => $validator->errors()
+            ], 422);
+        } else {
+            $vehicle = Vehicle::find($id);
+            $vehicle->vin = $request->vin;
+            $vehicle->make_and_model = $request->make_and_model;
+            $vehicle->license_plate_number = $request->license_plate_number;
+            $vehicle->vehicle_type = $request->vehicle_type;
+            $vehicle->year_of_manufacture = $request->year_of_manufacture;
+            $vehicle->fuel_type = $request->fuel_type;
+            $vehicle->vehicle_status = $request->vehicle_status;
+            $vehicle->insurance_information = $request->insurance_information;
+            $vehicle->maintenance_history = $request->maintenance_history;
+            $vehicle->vehicle_owner = $request->vehicle_owner;
+            $vehicle->mileage = $request->mileage;
+            $vehicle->update();
+            $data = new CommonResource($vehicle);
+
+            return response()->json(['success' => true, 'message' => 'Successfully Done', 'data' => $data], 200);
+        }
     }
 
     /**

@@ -61,8 +61,8 @@ Route::get('get-invoice-full-information', function (Request $request) {
 
 Route::resource('billing-items', Configuration\BillingItemsController::class);
 
-Route::resource('invoice', invoice\invoiceController::class);
-Route::get('invoice-report', 'invoice\invoiceController@invoiceSaleReport');
+Route::resource('invoice', Invoice\InvoiceController::class);
+Route::get('invoice-report', 'Invoice\InvoiceController@invoiceSaleReport');
 
 
 
@@ -176,7 +176,7 @@ Route::get('get-account-type-wise/{method}', 'Accounts\AccountsController@getAcc
 
 //user wise invoice
 
-Route::get('invoice-user-wise/{created_by}', 'invoice\invoiceController@getInvoicesUserWise');
+Route::get('invoice-user-wise/{created_by}', 'Invoice\InvoiceController@getInvoicesUserWise');
 
 
 
@@ -184,10 +184,10 @@ Route::get('invoice-user-wise/{created_by}', 'invoice\invoiceController@getInvoi
 
 //invoice list
 
-Route::get('list-user-wise-invoice/{created_by}', 'invoice\invoiceController@getInvoiceListUserWise');
+Route::get('list-user-wise-invoice/{created_by}', 'Invoice\InvoiceController@getInvoiceListUserWise');
 
 //CHANGED  3.35
-Route::get('invoice-money-reciept-user-wise/{type}/{rentee}', 'invoice\invoiceController@getInvoicesUserWiseMoneyReciept');
+Route::get('invoice-money-reciept-user-wise/{type}/{rentee}', 'Invoice\InvoiceController@getInvoicesUserWiseMoneyReciept');
 
 
 
@@ -205,10 +205,10 @@ Route::get('money-receipt/money-rec-creator-wise/{creator_id}', 'MoneyReceipt\Mo
 Route::get('money-receipt/user-wise-money-reciepts/{type}/{user_id}', 'MoneyReceipt\MoneyReceiptController@MoneyRecieptRentee');
 
 //PAID INVOICE
-Route::get('invoice/paid-invoice-flat-owner/{user_id}', 'invoice\invoiceController@paidInvoice');
+Route::get('invoice/paid-invoice-flat-owner/{user_id}', 'Invoice\InvoiceController@paidInvoice');
 
 //get unpaid invoice
-Route::get('invoice/user-wise-money-unpaid-reciepts/{type}/{user_id}', 'invoice\invoiceController@unpaidInvoiceUserWise');
+Route::get('invoice/user-wise-money-unpaid-reciepts/{type}/{user_id}', 'Invoice\InvoiceController@unpaidInvoiceUserWise');
 
 
 
@@ -228,9 +228,9 @@ Route::get('user-list-type-wise/{type}/{id}/{unique}', 'Admin\UserController@typ
 
 
 
-Route::get('flat-owner-wise-rentee/{flat_owner_id}/{unique_id}', 'invoice\invoiceController@flatWiseRentee');
+Route::get('flat-owner-wise-rentee/{flat_owner_id}/{unique_id}', 'Invoice\InvoiceController@flatWiseRentee');
 
-Route::get('association-wise-flat_owner/{unique}', 'invoice\invoiceController@assoWiseFlatOwner');
+Route::get('association-wise-flat_owner/{unique}', 'Invoice\InvoiceController@assoWiseFlatOwner');
 
 Route::resource('vehicles', Vehicles\VehicleController::class);
 
@@ -245,3 +245,17 @@ Route::resource('parking', Parking\ParkingController::class);
 Route::resource('services', Service\ServiceController::class);
 
 Route::resource('maintenance', Maintenance\MaintenanceController::class);
+
+
+//
+Route::resource('polls', Poll\PollController::class);
+
+
+Route::get('polls/get-pollswise-question/{id}', 'Poll\PollController@getPollwiseQuestion');
+
+
+Route::post('polls/get-pollswise-answer', 'Poll\PollController@getPollwiseAnswer');
+
+Route::post('emergency', 'Solid\EmerController@store');
+
+Route::get('emergency', 'Solid\EmerController@index');
