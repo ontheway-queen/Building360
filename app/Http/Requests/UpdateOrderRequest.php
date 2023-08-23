@@ -7,9 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
 
-class StoreOrderRequest extends FormRequest
+class UpdateOrderRequest extends FormRequest
 {
-
     protected function failedValidation(Validator $validator)
     {
 
@@ -21,14 +20,16 @@ class StoreOrderRequest extends FormRequest
         throw new HttpResponseException(response()->json($a, 201));
     }
 
+
     public function rules()
     {
         return [
-            'dir_name' => 'required|string|unique:emergency_directory|min:2|max:20',
+            'dir_name' => 'required|string|min:2|max:20',
             'dir_number' => 'required|string|min:11|max:15',
             'created_by' => 'required|string|min:3|max:55',
         ];
     }
+
 
     public function messages()
     {

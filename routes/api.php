@@ -259,3 +259,8 @@ Route::post('polls/get-pollswise-answer', 'Poll\PollController@getPollwiseAnswer
 Route::post('emergency', 'Solid\EmerController@store');
 
 Route::get('emergency', 'Solid\EmerController@index');
+
+
+Route::put('emergency/{dir_id}', 'Solid\EmerController@update');
+
+Route::delete('emergency/{dir_id}', 'Solid\EmerController@destroy');
