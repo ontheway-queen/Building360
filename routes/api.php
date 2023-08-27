@@ -264,3 +264,12 @@ Route::get('emergency', 'Solid\EmerController@index');
 Route::put('emergency/{dir_id}', 'Solid\EmerController@update');
 
 Route::delete('emergency/{dir_id}', 'Solid\EmerController@destroy');
+
+
+Route::resource('announcement', Solid\AnnouncementController::class);
+
+Route::resource('complain', Solid\ComplainController::class);
+
+Route::resource('events', Solid\EventManagementController::class);
+
+Route::post('events/participate', 'Solid\EventManagementController@eventParticipate');
